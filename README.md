@@ -90,6 +90,11 @@ The second step is to add the frameworks as embedded frameworks:
 
 ![Add to Embedded Frameworks](docs/images/ios/framework-embed.png?raw=true "Add to Embedded Frameworks")
 
+### Settings verification
+Depending on the react native version you need to check the following settings in your ios project:
+- Verify that the following property is set: Runpath Search Paths should be @executable_path/Frameworks (under Build Settings -> Linking)
+- Objective-C only: Set Enable Modules (C and Objective-C) to Yes (under Build Settings -> Apple Clang - Language - Modules)
+
 ## Android native setup
 ### Base setup
 For android , all necessary files are included in the react-native library ; 

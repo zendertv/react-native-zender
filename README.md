@@ -59,8 +59,10 @@ The Zender player autorotates, if you don't want this behaviour you need to fix 
 ## Add NPM Package
 `$ npm install https://repo.zender.tv/rn/react-native-zender-2.0.0.tgz --save`
 
-Note that we add the package through a remote url instead of the public npm registry as the package is not public.
-Also npm linking from a local directory will not work as react-native does not support symbolic links for packages.
+Note:
+- we add the package through a remote url instead of the public npm registry as some of the libraries are proprietry and can not be public.
+- npm linking from a local directory will not work as react-native does not support symbolic links for packages.
+- the npm tgz file is large (150mb+) so it might take some time to install, when you use a recent npm version this will be cached locally for speedups
 
 ## Link the native package inside your own project
 Now that you've installed the package, you can link it. This will setup the relation between your project and the react-native zender module.
@@ -76,13 +78,14 @@ The first step it add the module Frameworks directory to the Framework search pa
 - Select your Application Target (on the left)
 - Select the build settings
 - Find the section "Framework Search Paths"
-- Add `$(PROJECT_DIR)/../node_modules/react-native-zender/ios/Frameworks` and make it as recursive
+- Add `$(PROJECT_DIR)/../node_modules/react-native-zender/ios/Frameworks` and mark it as recursive
 
 ![Add Framework Search Path](docs/images/ios/framework-searchpath.png?raw=true "Add Framework Search Path")
 
 ### Add to Embedded Frameworks to the project
 The second step is to add the frameworks as embedded frameworks:
 - Select your Application Target (on the left)
+- Select the General tab
 - Select Add the framework via the `Embedded Binaries` (+ button)
 - Select Other to add the framework (Deselect Copy if needed, Select Create folder references)
 - Browse to your `node_modules/react-native-zender/ios/Frameworks`

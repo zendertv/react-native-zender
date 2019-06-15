@@ -1,25 +1,18 @@
 # Description
 
-This repository provides a react-native wrapper around the Zender Player. Current version is 1.0.0
+This repository provides a react-native wrapper around the Zender Player. Current version is 2.0.0
 The react-native packages has several native dependencies. As these dependencies are not publicly available, they need to be manually added/installed.
 
 # Installation
 ## Add NPM Package
-Normally one would add the package with:
-`$ npm install react-native-zender-player --save`
-
-Currently this module is not publicly published yet.
-
-NOTE: 
-- installing it from a local directory through `npm link` or install from local directory breaks react-native scripts as they don't handle correctly symlinks.
-- install it from a github link `npm install git+ssh://git@github.com:zendertv/react-native-zender#v1.0.0
+`$ npm install react-native-zender --save`
+`$ npm install http://localhost:8000/react-native-zender-2.0.0.tgz --save`
 
 ## Link the native package inside your own project
 
 `$ react-native link react-native-zender`
 
-
-## Usage
+# Usage
 ```javascript
 import { ZenderPlayerView } from 'react-native-zender';
 
@@ -69,61 +62,16 @@ export default class App extends Component<Props> {
 ```
 
 
-#iOS native setup
+# iOS native setup
+## Configure Framework search Path
 
-## Configure cocoapods on your project
-The native dependencies of this project are provided as cocoapods. 
-As this package depends on several non-public cocoapods, this requires a bit more work than usual.
+![Add Framework Search Path](docs/images/ios/framework-searchpath.png?raw=true "Add Framework Search Path")
 
-### Install cocoapods (if needed)
-- install a recent ruby version
-- install the gem bundler `gem install bundler`
-- create a `Gemfile` :
-```
-source "http://rubygems.org"
+## Add to Embedded Frameworks to the project
 
-gem "cocoapods" , "~> 1.5.0"
-```
-- run `bundle install` to install cocoapods
+![Add to Embedded Frameworks](docs/images/ios/framework-embed.png?raw=true "Add to Embedded Frameworks")
 
-### Download the necessary pods locally
-`react-native-zender-player` depends on the Cocoapods `Zender` and `PhenixSdk`
-These need to installed locally. See instructions of each package on how to install.
-
-Note: don't forget to install `git-lfs` (git large file system support) if installing phenix-sdk from github
-
-### Create/Extend a Podfile
-- in your `$PROJECTDIR/ios` create or extend a podfile
-- to create a blank one run `pod init`
-
-```
-ENV['COCOAPODS_DISABLE_STATS'] = "true"
-# Uncomment the next line to define a global platform for your project
-platform :ios, '10.0'
-
-target 'ZenderRNSample' do
-  # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
-  #use_frameworks!
-
-  # Pods for ZenderRNSample
-  pod 'Zender/Core', :git => 'git@github.com:zendertv/zender-ios-sdk.git''
-  pod 'Zender/Phenix', :git => 'git@github.com:zendertv/zender-ios-sdk.git''
-  pod 'PhenixSdk' , :git => 'git@github.com:zendertv/phenix-ios-sdk.git' , :branch => 'v2018-10-25'
-
-  target 'ZenderRNSampleTests' do
-    inherit! :search_paths
-    # Pods for testing
-  end
-
-end
-```
-
-### Install the Pods
-- in your `$PROJECTDIR/ios` do a `pod install`
-
-Note: from now on open `YourProject.xcworkspace` instead of `YourProject.xcodeproj`
-
-#Android native setup
+# Android native setup
 ## Base setup
 For android , all necessary files are included in the react-native library ; 
 

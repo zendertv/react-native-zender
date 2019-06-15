@@ -1,16 +1,20 @@
 # Description
 
-This repository provides a react-native wrapper around the Zender Player. Current version is 2.0.0
+This repository provides a react-native wrapper around the Zender Player. 
 The react-native packages has several native dependencies. As these dependencies are not publicly available, they need to be manually added/installed.
+
+Current version is `2.0.0`
 
 # Usage
 ```javascript
 import { ZenderPlayerView } from 'react-native-zender';
 
+// The settings will be communicated to you after signing the contract
 const zenderTargetId  = "ttttt-ttttt-ttttt-tttt-ttttt"
 const zenderChannelId = "ccccc-ccccc-ccccc-cccc-ccccc"
 
 // Example Device Login provider
+// See authentication documentation for other providers such as Facebook,Google,JsonToken
 const zenderAuthentication = {
   provider: "device" ,
   payload: {
@@ -22,16 +26,20 @@ const zenderAuthentication = {
 
 const zenderConfig = {
   debugEnabled: false,
+  // iOS: you need to listen for the deviceToken and pass it here
+  // Android:
   deviceToken: "<deviceToken used for push notification>"
 }
 
 type Props = {};
 export default class App extends Component<Props> {
 
+  // Use this callback to handle when the users wants to close the view
   onZenderPlayerClose(event) {
     console.log('Zender Player Close Event');
   }
 
+  // This callback provides you with the information to make a shareobject with a deeplink
   onZenderPlayerQuizShareCode(event) {
     console.log('Zender Player Share code Event');
     console.log('Share text: '+event.shareText);

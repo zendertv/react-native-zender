@@ -114,7 +114,7 @@ To publish an app to the appstore, you need to strip the simulator part.
 - Add a `Run Script` below the `Enmbedded Frameworks` section
 - Enter `bash "${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}/Zender.framework/strip-framework.sh"`
 
-![Strip Frameworks](docs/images/ios/strip-framework.png?raw=true "Strip Framework")
+![Strip Frameworks](docs/images/ios/strip-frameworks.png?raw=true "Strip Framework")
 
 ### Disable bitcode
 Zender depends on frameworks that are currrently not BITCODE enabled.  Therefore you need to disable it:
@@ -127,12 +127,19 @@ Zender depends on frameworks that are currrently not BITCODE enabled.  Therefore
 ### Orientation Portrait
 The Zender player autorotates, if you don't want this behaviour you need to fix the app rotation or the controller
 
-![Fix portrait](docs/images/ios/portrait-only.png?raw=true "Fix Portrait Modus")
 - Select your Application Target (on the left)
 - Select the `General` tab
 - Select/Deselect the required `Device Orientation` options
 
+![Fix portrait](docs/images/ios/portrait-only.png?raw=true "Fix Portrait Modus")
+
 ### Background audio
+To be able to play audio in background, add this to the background mode:
+
+- Select your Application Target (on the left)
+- Select the `Capabilities` tab
+- Select `Audio, Airplay, and Picture in Picture`
+
 ![Background Audio](docs/images/ios/background-audio.png?raw=true "Background Audio")
 
 ### Settings verification

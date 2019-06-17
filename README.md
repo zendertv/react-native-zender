@@ -64,8 +64,8 @@ export default class App extends Component<Props> {
 }
 ```
 
-## Orientation
-The Zender player autorotates, if you don't want this behaviour you need to fix the app rotation
+
+
 
 # Installation
 ## Add NPM Package
@@ -104,6 +104,36 @@ The second step is to add the frameworks as embedded frameworks:
 - Add `Zender`, `ZenderPhenix` and `PhenixSdk`
 
 ![Add to Embedded Frameworks](docs/images/ios/framework-embed.png?raw=true "Add to Embedded Frameworks")
+
+### Strip frameworks
+The Zender frameworks provides `armv7, arm64, x86_64` architecture builds.
+To publish an app to the appstore, you need to strip the simulator part.
+
+- Select your Application Target (on the left)
+- Select the BuildPhases tab
+- Add a `Run Script` below the `Enmbedded Frameworks` section
+- Enter `bash "${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}/Zender.framework/strip-framework.sh"`
+
+![Strip Frameworks](docs/images/ios/strip-framework.png?raw=true "Strip Framework")
+
+### Disable bitcode
+Zender depends on frameworks that are currrently not BITCODE enabled.  Therefore you need to disable it:
+- Select your Application Target (on the left)
+- Select the `Build Settings` tab
+- Find `Enable Bitcode` and select NO
+
+![Disable bitcode](docs/images/ios/disable-bitcode.png?raw=true "Disable bitcode")
+
+### Orientation Portrait
+The Zender player autorotates, if you don't want this behaviour you need to fix the app rotation or the controller
+
+![Fix portrait](docs/images/ios/portrait-only.png?raw=true "Fix Portrait Modus")
+- Select your Application Target (on the left)
+- Select the `General` tab
+- Select/Deselect the required `Device Orientation` options
+
+### Background audio
+![Background Audio](docs/images/ios/background-audio.png?raw=true "Background Audio")
 
 ### Settings verification
 Depending on the react native version you need to check the following settings in your ios project:

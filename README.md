@@ -181,12 +181,29 @@ buildscript {
 ```
 
 
-## Dependencies
+### Dependencies
 For reference Zender also depends on:
 ```
      implementation 'com.google.code.gson:gson:2.8.2'
      implementation 'com.squareup.picasso:picasso:2.5.2'
 ```
+
+### Allow backup flag
+Depending on your React native version used, you may have to add the flag android:allowBackup to your app `AndroidManifest.xml`
+
+```
+ <manifest xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:tools="http://schemas.android.com/tools"
+     package="com.zenderrnsample">
+
+     <uses-permission android:name="android.permission.INTERNET" />
+     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+
+     <application
++        tools:replace="android:allowBackup"
+
+```
+
 
 ### Soft-input pan
 Android has different ways of dealing with the focus when typing on the keyboard.

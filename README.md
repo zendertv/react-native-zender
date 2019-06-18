@@ -3,7 +3,7 @@
 This repository provides a react-native wrapper around the Zender Player. 
 The react-native packages has several native dependencies. As these dependencies are not publicly available, they need to be manually added/installed.
 
-Current version is `2.0.1`
+Current version is `2.0.1` : `Zender 2.0.0`, `ZenderPhenix 2.0.0`
 
 # Usage
 ```javascript
@@ -141,6 +141,9 @@ To be able to play audio in background, add this to the background mode:
 - Select `Audio, Airplay, and Picture in Picture`
 
 ![Background Audio](docs/images/ios/background-audio.png?raw=true "Background Audio")
+
+### Target version
+the iOS target version is `9.0` and above
 
 ### Settings verification
 Depending on the react native version you need to check the following settings in your ios project:

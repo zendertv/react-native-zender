@@ -3,7 +3,7 @@
 This repository provides a react-native wrapper around the Zender Player. 
 The react-native packages has several native dependencies. As these dependencies are not publicly available, they need to be manually added/installed.
 
-Current react native version is `2.0.1` 
+Current react native version is `2.0.2` 
 - ios dependencies: `Zender 2.0.0`, `ZenderPhenix 2.0.0`
 - android dependencies: `Zender 2.0.5`, `ZenderPhenix 2.0.5`
 
@@ -86,7 +86,7 @@ export default class App extends Component<Props> {
 
 # Installation
 ## Add NPM Package
-`$ npm install https://repo.zender.tv/rn/react-native-zender-2.0.1.tgz --save`
+`$ npm install https://repo.zender.tv/rn/react-native-zender-2.0.2.tgz --save`
 
 Note:
 - we add the package through a remote url instead of the public npm registry as some of the libraries are proprietry and can not be public.
@@ -221,7 +221,8 @@ When using the keyboard in zender , we want a different behavior: scroll up the 
 To have the expected behavior Zender forces the softInputModus `adjustPan`
 
 ## Changelog
-- 2.0.1: added zender libs ios 2.0.5 , phenix sdk 2019.2.1 , remove legacy http library dependency Android, removed allowbackup requirement for Android
+- 2.0.2: fixes to android logging structure, removed allowbackup requirement for Android
+- 2.0.1: added zender libs ios 2.0.5 , phenix sdk 2019.2.1 , remove legacy http library dependency Android,
 - 2.0.0: rename module to reactive-native-zender , installation via remote url , local framework linking instead of cocoapods
 - 1.0.0: fixes background/foreground, connectionfeedback flex layout rendering, image fullwidth, allow auto-orientation
 - 0.0.3: react-native android version

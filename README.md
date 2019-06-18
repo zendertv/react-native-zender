@@ -39,7 +39,7 @@ const zenderConfig = {
   debugEnabled: false,
   // iOS: you need to listen for the deviceToken and pass it here
   // Android:
-  deviceToken: "<deviceToken used for push notification>"
+  deviceToken: "<deviceToken used for push notification without spaces>"
 }
 
 type Props = {};

@@ -3,7 +3,9 @@
 This repository provides a react-native wrapper around the Zender Player. 
 The react-native packages has several native dependencies. As these dependencies are not publicly available, they need to be manually added/installed.
 
-Current version is `2.0.1` : `Zender 2.0.0`, `ZenderPhenix 2.0.0`
+Current react native version is `2.0.1` 
+- ios dependencies: `Zender 2.0.0`, `ZenderPhenix 2.0.0`
+- android dependencies: `Zender 2.0.5`, `ZenderPhenix 2.0.5`
 
 # Usage
 ```javascript

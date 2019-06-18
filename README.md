@@ -13,7 +13,7 @@ Current react native version is `2.0.1`
 - Get the information (the I icon)
 - Read the targetId and channelId
 
-![Zender TargetId and ChannelId](docs/images/targetId-channeldId.png?raw=true "Find your Zender TargetId and ChannelId")
+![Zender TargetId and ChannelId](docs/images/targetId-channelId.png?raw=true "Find your Zender TargetId and ChannelId")
 
 # Usage
 ```javascript

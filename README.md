@@ -116,10 +116,10 @@ The second step is to add the frameworks as embedded frameworks:
 - Select your Application Target (on the left)
 - Select the General tab
 - Select Add the framework via the `Embedded Binaries` (+ button)
-- Select Other to add the framework (Deselect Copy if needed, Select Create folder references)
+- Select Other to add the framework 
 - Browse to your `node_modules/react-native-zender/ios/Frameworks`
-- Add `Zender`, `ZenderPhenix` and `PhenixSdk`
-- When a screen pops up to 'Choose options for adding these files' select `Create folder references`
+- Add frameworks `Zender`, `ZenderPhenix` and `PhenixSdk`
+- When a screen pops up to 'Choose options for adding these files' `(Deselect Copy if needed, Select Create folder references)`
 
 ![Add to Embedded Frameworks](docs/images/ios/framework-embed.png?raw=true "Add to Embedded Frameworks")
 

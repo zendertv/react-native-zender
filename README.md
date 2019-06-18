@@ -13,10 +13,11 @@ Current react native version is `2.0.1`
 - Get the information (the I icon)
 - Read the targetId and channelId
 
-![Zender TargetId and ChannelId](docs/images/targetId-channelId.png?raw=true "Find your Zender TargetId and ChannelId")
+ ![Zender TargetId and ChannelId](docs/images/targetId-channelId.png?raw=true "Find your Zender TargetId and ChannelId")
 
 # Usage
 ```javascript
+import React, { Component } from 'react';
 import { ZenderPlayerView } from 'react-native-zender';
 
 // The settings will be communicated to you after signing the contract
@@ -44,6 +45,12 @@ const zenderConfig = {
 type Props = {};
 export default class App extends Component<Props> {
 
+  constructor(props) {
+    super(props);
+    this.onZenderPlayerClose = this.onZenderPlayerClose.bind(this);
+    this.onZenderPlayerQuizShareCode = this.onZenderPlayerQuizShareCode.bind(this);
+  }
+  
   // Use this callback to handle when the users wants to close the view
   onZenderPlayerClose(event) {
     console.log('Zender Player Close Event');
@@ -112,6 +119,7 @@ The second step is to add the frameworks as embedded frameworks:
 - Select Other to add the framework (Deselect Copy if needed, Select Create folder references)
 - Browse to your `node_modules/react-native-zender/ios/Frameworks`
 - Add `Zender`, `ZenderPhenix` and `PhenixSdk`
+- When a screen pops up to 'Choose options for adding these files' select `Create folder references`
 
 ![Add to Embedded Frameworks](docs/images/ios/framework-embed.png?raw=true "Add to Embedded Frameworks")
 
@@ -120,8 +128,8 @@ The Zender frameworks provides `armv7, arm64, x86_64` architecture builds.
 To publish an app to the appstore, you need to strip the simulator part.
 
 - Select your Application Target (on the left)
-- Select the BuildPhases tab
-- Add a `Run Script` below the `Enmbedded Frameworks` section
+- Select the Build Phases tab
+- Add a `Run Script` (plus sign top left) below the `Enmbedded Frameworks` section
 - Enter `bash "${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}/Zender.framework/strip-framework.sh"`
 
 ![Strip Frameworks](docs/images/ios/strip-frameworks.png?raw=true "Strip Framework")

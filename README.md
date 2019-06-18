@@ -7,6 +7,14 @@ Current react native version is `2.0.1`
 - ios dependencies: `Zender 2.0.0`, `ZenderPhenix 2.0.0`
 - android dependencies: `Zender 2.0.5`, `ZenderPhenix 2.0.5`
 
+# Find your configuration in the Zender Admin
+- Logging to the admin <https://admin.zender.tv>
+- Select a specific stream
+- Get the information (the I icon)
+- Read the targetId and channelId
+
+![Zender TargetId and ChannelId](docs/targetId-channeldId.png?raw=true "Find your Zender TargetId and ChannelId")
+
 # Usage
 ```javascript
 import { ZenderPlayerView } from 'react-native-zender';

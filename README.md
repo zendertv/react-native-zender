@@ -3,8 +3,8 @@
 This repository provides a react-native wrapper around the Zender Player. 
 The react-native packages has several native dependencies. As these dependencies are not publicly available, they need to be manually added/installed.
 
-Current react native version is `2.0.2` 
-- ios dependencies: `Zender 2.0.0`, `ZenderPhenix 2.0.0`
+Current react native version is `1.2.0` 
+- ios dependencies: `Zender 2.3.0`, `ZenderPhenix 2.3.0`
 - android dependencies: `Zender 2.0.5`, `ZenderPhenix 2.0.5`
 
 # Find your configuration in the Zender Admin
@@ -86,12 +86,20 @@ export default class App extends Component<Props> {
 
 # Installation
 ## Add NPM Package
-`$ npm install https://repo.zender.tv/rn/react-native-zender-2.0.2.tgz --save`
+`$ npm install git+https://git@github.com/zendertv/react-native-zender.git#feature-private-cocoapod-repo`
+
+TOCHECK:
+- cocoapods installed
+- `cd ios ; pod install --repo-update`
+- add Podfile 
+```
+source 'https://github.com/zendertv/Specs.git'
+source 'https://github.com/CocoaPods/Specs.git'
+```
 
 Note:
 - we add the package through a remote url instead of the public npm registry as some of the libraries are proprietry and can not be public.
 - npm linking from a local directory will not work as react-native does not support symbolic links for packages.
-- the npm tgz file is large (150mb+) so it might take some time to install, when you use a recent npm version this will be cached locally for speedups
 
 ## Link the native package inside your own project
 Now that you've installed the package, you can link it. This will setup the relation between your project and the react-native zender module.

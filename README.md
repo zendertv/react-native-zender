@@ -97,6 +97,11 @@ source 'https://github.com/zendertv/Specs.git'
 source 'https://github.com/CocoaPods/Specs.git'
 ```
 
+autolink:
+- ```Detected React Native module pod for RNZenderPlayer```
+- no need to link
+
+
 Note:
 - we add the package through a remote url instead of the public npm registry as some of the libraries are proprietry and can not be public.
 - npm linking from a local directory will not work as react-native does not support symbolic links for packages.

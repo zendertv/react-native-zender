@@ -31,7 +31,7 @@ android {
 def deployPath = file(getProperty('aar.deployPath'))
 rootProject.allprojects {
   repositories {
-    maven  { url "https://repo.zender.tv/maventest/"
+    maven  { url "https://repo.zender.tv/maventest/" }
    }
 }
 
@@ -61,4 +61,3 @@ dependencies {
     */
 
 }
-  

@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "RNZenderPlayer"
-  s.version      = "2.4.0"
+  s.version      = "2.5.0"
   s.summary      = "React Native wrapper around the Zender Player"
   s.description  = <<-DESC
                   RNZenderPlayer

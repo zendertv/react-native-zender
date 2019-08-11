@@ -42,6 +42,7 @@ public class RNZenderPlayerManager extends ViewGroupManager<ZenderPlayerView> im
     private String mTargetId = null;
     private String mChannelId = null;
     private Boolean mDebugEnabled = false;
+    private String mEnvironment = "production";
     private HashMap<String, Object> mAuthentication;
     private ZenderAuthentication zenderAuthentication;
     private ZenderUserDevice zenderUserDevice;
@@ -82,6 +83,7 @@ public class RNZenderPlayerManager extends ViewGroupManager<ZenderPlayerView> im
         mTargetId = null;
         mChannelId = null;
         mDebugEnabled = null;
+        mEnvironment = "production";
         mDeviceToken = null;
         mAuthentication = null;
         zenderUserDevice = null;
@@ -116,8 +118,12 @@ public class RNZenderPlayerManager extends ViewGroupManager<ZenderPlayerView> im
         Log.d(TAG, "launching zender player");
 
         ZenderPlayerConfig playerConfig = new ZenderPlayerConfig(mTargetId, mChannelId);
+p
         // Temporary override endpong for new styling
         String playerEndpointPrefix = "https://player2-native.zender.tv";
+        if (mEnviroment=="staging") {
+		playerEndpointPrefix = "https://player2-native.staging.zender.tv";
+        }
         playerConfig.overridePlayerEndpointPrefix(playerEndpointPrefix);
 
         // Register video player
@@ -200,6 +206,12 @@ public class RNZenderPlayerManager extends ViewGroupManager<ZenderPlayerView> im
             mDebugEnabled = config.getBoolean("debugEnabled");
         } else {
             mDebugEnabled = false;
+        }
+
+        if (config.hasKey("environment")) {
+            mEnvironment= config.getString("environment");
+        } else {
+            mEnvironment = "production";
         }
 
         trylaunchPlayer();

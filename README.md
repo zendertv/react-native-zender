@@ -1,3 +1,46 @@
+# Notes
+
+- cocoapods needs to be installed
+- RN 0.60  - autolink
+- Older `react-native-link react-native-zender`
+- iOS
+	```
+	add Podfile repo
+	cd ios ; pod install
+	```
+
+- android: increase heap size gradle
+- android: update manifest
+```
+* What went wrong:
+Execution failed for task ':app:processDebugManifest'.
+> Manifest merger failed : uses-sdk:minSdkVersion 16 cannot be smaller than version 19 declared in library [tv.zender:zender-core:2.0.5-SNAPSHOT] /Users/patrick/.gradle/caches/transforms-2/files-2.1/d0af51f60ae0363f6f3bbf180e01c5ad/AndroidManifest.xml as the library might be using APIs not available in 16
+        Suggestion: use a compatible library with a minSdk of at most 16,
+                or increase this project's minSdk version to at least 19,
+                or use tools:overrideLibrary="tv.zender" to force usage (may lead to runtime failures)
+```
+	
+- disable autolinking
+```
+// react-native.config.js
+module.exports = {
+  dependencies: {
+    'react-native-zender': {
+      platforms: {
+        android: {
+                //packageInstance: 'new RNZenderPlayerPackage()', // disable Android platform, other platforms will still autolink if provided
+                },
+        ios: null // disable Android platform, other platforms will still autolink if provided
+      },
+    },
+  },
+};
+```
+
+- script Podspec
+- linking Pods manually , directory
+- check keyboard
+
 # Description
 
 This repository provides a react-native wrapper around the Zender Player. 
@@ -88,19 +131,27 @@ export default class App extends Component<Props> {
 ## Add NPM Package
 `$ npm install git+https://git@github.com/zendertv/react-native-zender.git#feature-private-cocoapod-repo`
 
-TOCHECK:
+TODO:
 - cocoapods installed
 - `cd ios ; pod install --repo-update`
+- `pod repo update`
 - add Podfile 
 ```
 source 'https://github.com/zendertv/Specs.git'
 source 'https://github.com/CocoaPods/Specs.git'
 ```
 
+```
+source 'https://cdn.cocoapods.org/'
+```
+
 autolink:
 - ```Detected React Native module pod for RNZenderPlayer```
 - no need to link
 
+
+TODO:
+	- remote repo.zender.tv
 
 Note:
 - we add the package through a remote url instead of the public npm registry as some of the libraries are proprietry and can not be public.
@@ -203,6 +254,7 @@ buildscript {
 
 
 ### Dependencies
+TODO: not needed
 For reference Zender also depends on:
 ```
      implementation 'com.google.code.gson:gson:2.8.2'
@@ -210,6 +262,7 @@ For reference Zender also depends on:
 ```
 
 ### Allow backup flag
+TODO: still needed?
 Depending on your React native version used, you may have to add the flag android:allowBackup to your app `AndroidManifest.xml`
 
 ```
@@ -227,6 +280,7 @@ Depending on your React native version used, you may have to add the flag androi
 
 
 ### Soft-input pan
+TODO: can we do this in the plugin
 Android has different ways of dealing with the focus when typing on the keyboard.
 React-Native by default uses `android:windowSoftInputMode="adjustResize">`. This setting resizes the view to allow for the keyboard.
 

@@ -1,6 +1,6 @@
 {
   "name": "react-native-zender",
-  "version": "2.6.0",
+  "version": "2.7.0-beta1",
   "description": "React Native component for Zender https://zender.tv",
   "main": "index.js",
   "scripts": {

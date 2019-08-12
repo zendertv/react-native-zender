@@ -120,7 +120,7 @@ public class RNZenderPlayerManager extends ViewGroupManager<ZenderPlayerView> im
         ZenderPlayerConfig playerConfig = new ZenderPlayerConfig(mTargetId, mChannelId);
         // Temporary override endpoint for new styling
         String playerEndpointPrefix = "https://player2-native.zender.tv";
-        if (mEnvironment=="staging") {
+        if (mEnvironment.equals("staging")) {
 		playerEndpointPrefix = "https://player2-native.staging.zender.tv";
         }
         playerConfig.overridePlayerEndpointPrefix(playerEndpointPrefix);

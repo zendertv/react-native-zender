@@ -1,49 +1,47 @@
 #import "RNZenderPlayerView.h"
-//#import <Zender/ZenderPlayer.h>
-//#import <Zender/ZenderPlayerConfig.h>
-//#import <Zender/ZenderAVPlayerController.h>
-//#import <Zender/ZenderAuthentication.h>
-//#import <Zender/ZenderPhenixPlayerController.h>
-//#import <Zender/ZenderApiClient.h>
 
-// #import <Zender/ZenderLogger.h>
 @import Zender;
-@import ZenderPhenix;
-@import PhenixSdk;
 
 // Note: We prefix our object with RN here to avoid clashes
-@implementation RNZenderPlayerView
+@implementation RNZenderPlayerView {
+    NSString *targetId;
+    NSString *channelId;
+    
+    NSString *environment;
+    NSString *deviceToken;
+    NSString *redeemCode;
+    NSString *backgroundColor;
+    BOOL debugEnabled;
+    
+    ZenderPlayer *player;
+    ZenderAuthentication *authentication;
+    
+}
 
 - (instancetype)init
 {
     
     if (self = [super init]) {
         
-        NSString *targetId = _targetId;
-        NSString *channelId =_channelId;
+        // Create a Zender Player
+        if (player == nil) {
+            player= [ZenderPlayer new];
+        }
         
-        // Override the endpoint for now
-        NSString *playerEndpoint=@"https://player2-native.zender.tv";
-        //  playerEndpoint=@"https://player2-native.staging.zender.tv";
+        // Create a player configuration
+        ZenderPlayerConfig* settingsConfig = [ZenderPlayerConfig configWithTargetId:targetId channelId:channelId];
+        player.config = settingsConfig;
         
-        ZenderPlayerConfig *playerConfig = [ZenderPlayerConfig configWithTargetId:targetId channelId:channelId];
+        // Use authentication
+        player.authentication = authentication;
         
-        // Register Videoplayers - Note: Order Matters
-        ZenderPhenixPlayerController *zenderPhenixPlayer = [ZenderPhenixPlayerController new];
-        [playerConfig registerVideoController:zenderPhenixPlayer];
+        // Set this class as a ZenderPlayerDelegate
+        player.delegate = self;
         
-        ZenderAVPlayerController *zenderAVPlayer = [ZenderAVPlayerController new];
-        [playerConfig registerVideoController:zenderAVPlayer];
+        player.view.frame = self.webView.frame;
+        player.view.hidden = false;
         
-        _player = [ZenderPlayer new];
-        _player.config = playerConfig;
-        
-        [playerConfig overridePlayerEndpointPrefix:playerEndpoint];
-        _player.delegate = self;
-        
-        
-        [self addSubview:self.player.view];
-        
+        [self addSubview:player.view];
         // NOTE: we can't start the player during init
         // This is because TargetId & ChannelId are only initialized in the setters
         //  [_player start];
@@ -64,21 +62,21 @@
 #pragma marker Zender Setters
 
 -(void)setTargetId:(NSString*) targetId {
-    _targetId = targetId;
-    _player.config.targetId = targetId;
+    self.targetId = targetId;
+    player.config.targetId = targetId;
     
     [self startZenderPlayerWhenSettersComplete];
 }
 
 -(void)setChannelId:(NSString*) channelId {
-    _channelId = channelId;
-    _player.config.channelId = channelId;
+    self.channelId = channelId;
+    player.config.channelId = channelId;
     
     [self startZenderPlayerWhenSettersComplete];
 }
 
 -(void)setAuthentication:(NSDictionary *)authentication {
-    _authentication = authentication;
+    self.authentication = authentication;
     
     /*
      ZenderAuthentication *deviceAuthentication = [ZenderAuthentication authenticationWith:@{
@@ -93,7 +91,7 @@
     
     // Check if we got both payload & provider
     if ((authenticationProvider!=nil) && (authenticationPayload!=nil)) {
-        _player.authentication = [ZenderAuthentication authenticationWith:authenticationPayload provider:authenticationProvider];
+        player.authentication = [ZenderAuthentication authenticationWith:authenticationPayload provider:authenticationProvider];
     }
     
     [self startZenderPlayerWhenSettersComplete];
@@ -101,33 +99,67 @@
 
 -(void)setConfig:(NSDictionary *)config {
     
-    _config = config;
-    
     // If config is nil, skip
     if (config == nil) {
         return;
     }
     
+    // Set debug
     NSNumber *checkDebugEnabled = [config objectForKey:@"debugEnabled"];
-    NSNumber *checkDeviceToken = [config objectForKey:@"deviceToken"];
-    
     if (checkDebugEnabled!=nil) {
         BOOL debugEnabled = [config objectForKey:@"debugEnabled"];
         //     NSLog(@"BOOL DebugEnabled : %@", debugEnabled ? @"Yes" : @"No");
         
         if (debugEnabled) {
             [[ZenderLogger sharedInstance] setLevel:ZenderLogger_LEVEL_DEBUG];
-            [_player.config enableDebug:debugEnabled];
+            [player.config enableDebug:debugEnabled];
         }
     }
     
+    // Register device
+    NSNumber *checkDeviceToken = [config objectForKey:@"deviceToken"];
     if (checkDeviceToken!=nil) {
-        _deviceToken = [config objectForKey:@"deviceToken"];
+        deviceToken = [config objectForKey:@"deviceToken"];
         
         ZenderUserDevice *userDevice = [ZenderUserDevice new];
         userDevice.token = _deviceToken;
-        [_player.config setUserDevice:userDevice];
+        [player.config setUserDevice:userDevice];
         
+    }
+    
+    // Check Environment
+    // Override endpoints if needed
+    NSNumber *checkEnvironment = [config objectForKey:@"environment"];
+    if (checkEnvironment!=nil) {
+        environment = [config objectForKey:@"environment"];
+        
+        if ([environment isEqualToString:@"staging"]) {
+            NSString *playerEndpoint=@"https://player2-native.staging.zender.tv";
+            NSString *apiEndpoint=@"https://api.staging.zender.tv";
+            NSString *logEndpoint=@"https://logs.staging.zender.tv/v1/ingest/batch";
+            
+            [settingsConfig overridePlayerEndpointPrefix:playerEndpoint];
+            [settingsConfig overrideApiEndpointUrl:apiEndpoint];
+            [[ZenderLogger sharedInstance] overrideEndpoint:logEndpoint];
+            
+        }
+    }
+    
+    // Redeem quiz code if needed
+    NSNumber *checkRedeemCode = [config objectForKey:@"redeemCode"];
+    if (checkRedeemCode!=nil) {
+        redeemCode = [config objectForKey:@"redeemCode"];
+        [player redeemCodeQuiz:redeemCode];
+    }
+    
+    // Set the background
+    NSNumber *checkBackgroundColor = [config objectForKey:@"backgroundColor"];
+
+    if (checkBackgroundColor!=nil) {
+        backgroundColor = [config objectForKey:@"backgroundColor"];
+        player.view.backgroundColor = [RNZenderPlayer colorWithHexString:backgroundColor];
+    } else {
+        player.view.backgroundColor = [UIColor blackColor];
     }
     
     [self startZenderPlayerWhenSettersComplete];
@@ -135,27 +167,42 @@
 
 // Currently we check to see if we got all setters before starting the player
 - (void) startZenderPlayerWhenSettersComplete {
-    if (_targetId == nil) { return; }
-    if (_channelId == nil) { return; }
-    if (_authentication == nil) { return ; }
-    if (_config == nil) { return ; }
+    if (targetId == nil) { return; }
+    if (channelId == nil) { return; }
+    if (authentication == nil) { return ; }
+    if (config == nil) { return ; }
     
-    self.player.view.frame = self.frame;
+    player.view.frame = self.frame;
     
-    [self setupApiSubscribeDevice];
-    [_player start];
+    //[self setupApiSubscribeDevice];
+    [player start];
 }
 
 - (void)dealloc
 {
     //NSLog(@"alloc dealloc");
-    [_player stop];
-    _player = nil;
+    [player stop];
+    player = nil;
 }
 
 
++ (UIColor *)colorWithHexString:(NSString *)stringToConvert
+{
+    NSString *noHashString = [stringToConvert stringByReplacingOccurrencesOfString:@"#" withString:@""]; // remove the #
+    NSScanner *scanner = [NSScanner scannerWithString:noHashString];
+    [scanner setCharactersToBeSkipped:[NSCharacterSet symbolCharacterSet]]; // remove + and $
+    
+    unsigned hex;
+    if (![scanner scanHexInt:&hex]) return nil;
+    int r = (hex >> 16) & 0xFF;
+    int g = (hex >> 8) & 0xFF;
+    int b = (hex) & 0xFF;
+    
+    return [UIColor colorWithRed:r / 255.0f green:g / 255.0f blue:b / 255.0f alpha:1.0f];
+}
 
-#pragma marker Zender Events
+
+#pragma mark Zender Events
 
 - (void)zenderPlayer:(ZenderPlayer *)zenderPlayer onZenderPlayerClose:(NSDictionary *)payload {
     
@@ -188,36 +235,38 @@
 
 
 
-- (void)setupApiSubscribeDevice {
-    
-    if (_deviceToken == nil) {
-        return;
-    }
-    
-    ZenderApiClient *apiClient = [[ZenderApiClient alloc] initWithTargetId:_targetId channelId:_channelId ];
-    
-    apiClient.authentication = self.player.authentication;
-    
-    ZenderUserDevice *userDevice = [ZenderUserDevice new];
-    userDevice.token = _deviceToken;
-    
-    [apiClient login:^(NSError *error, ZenderSession *session) {
-        ZLog_Debug(@"RNZenderPlayer", @"api login callback completed");
-        
-        if (error == nil) {
-            [apiClient registerDevice:userDevice andCompletionHandler:^(NSError *error) {
-                if (error == nil) {
-                    ZLog_Debug(@"RNZenderPlayer", @"api registerDevice callback completed");
-                } else {
-                    ZLog_Error(@"RNZenderPlayer", @"api registerDevice callback failed");
-                }
-            }];
-        } else {
-            ZLog_Error(@"RNZenderPlayer", @"failed in example %@",error);
-        }
-    }];
-    
-}
+/*
+ - (void)setupApiSubscribeDevice {
+ 
+ if (_deviceToken == nil) {
+ return;
+ }
+ 
+ ZenderApiClient *apiClient = [[ZenderApiClient alloc] initWithTargetId:_targetId channelId:_channelId ];
+ 
+ apiClient.authentication = self.player.authentication;
+ 
+ ZenderUserDevice *userDevice = [ZenderUserDevice new];
+ userDevice.token = _deviceToken;
+ 
+ [apiClient login:^(NSError *error, ZenderSession *session) {
+ ZLog_Debug(@"RNZenderPlayer", @"api login callback completed");
+ 
+ if (error == nil) {
+ [apiClient registerDevice:userDevice andCompletionHandler:^(NSError *error) {
+ if (error == nil) {
+ ZLog_Debug(@"RNZenderPlayer", @"api registerDevice callback completed");
+ } else {
+ ZLog_Error(@"RNZenderPlayer", @"api registerDevice callback failed");
+ }
+ }];
+ } else {
+ ZLog_Error(@"RNZenderPlayer", @"failed in example %@",error);
+ }
+ }];
+ 
+ }
+ */
 
 
 @end

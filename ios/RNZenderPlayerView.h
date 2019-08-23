@@ -11,7 +11,6 @@
 @property(nonatomic, strong)NSString *channelId;
 @property(nonatomic, strong)NSDictionary *authentication;
 @property(nonatomic, strong)NSDictionary *config;
-@property(nonatomic, strong)NSString *deviceToken;
 
 @property(nonatomic, copy)RCTBubblingEventBlock onIosZenderPlayerClose;
 @property(nonatomic, copy)RCTBubblingEventBlock onIosZenderPlayerQuizShareCode;

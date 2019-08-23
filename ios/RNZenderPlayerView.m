@@ -23,7 +23,7 @@
         }
         
         // Create a player configuration
-        ZenderPlayerConfig* settingsConfig = [ZenderPlayerConfig configWithTargetId:targetId channelId:channelId];
+        ZenderPlayerConfig* settingsConfig = [ZenderPlayerConfig configWithTargetId:_targetId channelId:_channelId];
         _player.config = settingsConfig;
         
         // Use authentication
@@ -31,8 +31,6 @@
         
         // Set this class as a ZenderPlayerDelegate
         _player.delegate = self;
-        
-        _player.view.frame = self.webView.frame;
         _player.view.hidden = false;
         
         [self addSubview:_player.view];
@@ -120,7 +118,7 @@
         deviceToken = [config objectForKey:@"deviceToken"];
         
         ZenderUserDevice *userDevice = [ZenderUserDevice new];
-        userDevice.token = _deviceToken;
+        userDevice.token = deviceToken;
         [_player.config setUserDevice:userDevice];
         
     }
@@ -136,8 +134,8 @@
             NSString *apiEndpoint=@"https://api.staging.zender.tv";
             NSString *logEndpoint=@"https://logs.staging.zender.tv/v1/ingest/batch";
             
-            [settingsConfig overridePlayerEndpointPrefix:playerEndpoint];
-            [settingsConfig overrideApiEndpointUrl:apiEndpoint];
+            [_player.config overridePlayerEndpointPrefix:playerEndpoint];
+            [_player.config overrideApiEndpointUrl:apiEndpoint];
             [[ZenderLogger sharedInstance] overrideEndpoint:logEndpoint];
             
         }

@@ -74,6 +74,7 @@
         return;
     }
     
+    _authentication = authentication;
     /*
      ZenderAuthentication *deviceAuthentication = [ZenderAuthentication authenticationWith:@{
      @"token": [[[UIDevice currentDevice] identifierForVendor] UUIDString],
@@ -100,6 +101,7 @@
         return;
     }
     
+    _config = config;
     // Set debug
     NSNumber *checkDebugEnabled = [config objectForKey:@"debugEnabled"];
     if (checkDebugEnabled!=nil) {
@@ -266,4 +268,5 @@
 
 
 @end
+
 

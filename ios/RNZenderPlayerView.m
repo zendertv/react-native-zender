@@ -4,17 +4,11 @@
 
 // Note: We prefix our object with RN here to avoid clashes
 @implementation RNZenderPlayerView {
-    NSString *targetId;
-    NSString *channelId;
-    
     NSString *environment;
     NSString *deviceToken;
     NSString *redeemCode;
     NSString *backgroundColor;
     BOOL debugEnabled;
-    
-    ZenderPlayer *player;
-    ZenderAuthentication *authentication;
     
 }
 
@@ -24,24 +18,24 @@
     if (self = [super init]) {
         
         // Create a Zender Player
-        if (player == nil) {
-            player= [ZenderPlayer new];
+        if (_player == nil) {
+            _player= [ZenderPlayer new];
         }
         
         // Create a player configuration
         ZenderPlayerConfig* settingsConfig = [ZenderPlayerConfig configWithTargetId:targetId channelId:channelId];
-        player.config = settingsConfig;
+        _player.config = settingsConfig;
         
         // Use authentication
-        player.authentication = authentication;
+        _player.authentication = nil;
         
         // Set this class as a ZenderPlayerDelegate
-        player.delegate = self;
+        _player.delegate = self;
         
-        player.view.frame = self.webView.frame;
-        player.view.hidden = false;
+        _player.view.frame = self.webView.frame;
+        _player.view.hidden = false;
         
-        [self addSubview:player.view];
+        [self addSubview:_player.view];
         // NOTE: we can't start the player during init
         // This is because TargetId & ChannelId are only initialized in the setters
         //  [_player start];
@@ -56,27 +50,31 @@
 -(void)layoutSubviews
 {
     [super layoutSubviews];
-    self.player.view.frame = self.frame;
+    _player.view.frame = self.frame;
 }
 
 #pragma marker Zender Setters
 
 -(void)setTargetId:(NSString*) targetId {
-    self.targetId = targetId;
-    player.config.targetId = targetId;
+    _targetId = targetId;
+    _player.config.targetId = targetId;
     
     [self startZenderPlayerWhenSettersComplete];
 }
 
 -(void)setChannelId:(NSString*) channelId {
-    self.channelId = channelId;
-    player.config.channelId = channelId;
+    _channelId = channelId;
+    _player.config.channelId = channelId;
     
     [self startZenderPlayerWhenSettersComplete];
 }
 
 -(void)setAuthentication:(NSDictionary *)authentication {
-    self.authentication = authentication;
+    
+    // If config is nil, skip
+    if (authentication == nil) {
+        return;
+    }
     
     /*
      ZenderAuthentication *deviceAuthentication = [ZenderAuthentication authenticationWith:@{
@@ -91,7 +89,7 @@
     
     // Check if we got both payload & provider
     if ((authenticationProvider!=nil) && (authenticationPayload!=nil)) {
-        player.authentication = [ZenderAuthentication authenticationWith:authenticationPayload provider:authenticationProvider];
+        _player.authentication = [ZenderAuthentication authenticationWith:authenticationPayload provider:authenticationProvider];
     }
     
     [self startZenderPlayerWhenSettersComplete];
@@ -112,7 +110,7 @@
         
         if (debugEnabled) {
             [[ZenderLogger sharedInstance] setLevel:ZenderLogger_LEVEL_DEBUG];
-            [player.config enableDebug:debugEnabled];
+            [_player.config enableDebug:debugEnabled];
         }
     }
     
@@ -123,7 +121,7 @@
         
         ZenderUserDevice *userDevice = [ZenderUserDevice new];
         userDevice.token = _deviceToken;
-        [player.config setUserDevice:userDevice];
+        [_player.config setUserDevice:userDevice];
         
     }
     
@@ -149,17 +147,17 @@
     NSNumber *checkRedeemCode = [config objectForKey:@"redeemCode"];
     if (checkRedeemCode!=nil) {
         redeemCode = [config objectForKey:@"redeemCode"];
-        [player redeemCodeQuiz:redeemCode];
+        [_player redeemCodeQuiz:redeemCode];
     }
     
     // Set the background
     NSNumber *checkBackgroundColor = [config objectForKey:@"backgroundColor"];
-
+    
     if (checkBackgroundColor!=nil) {
         backgroundColor = [config objectForKey:@"backgroundColor"];
-        player.view.backgroundColor = [RNZenderPlayer colorWithHexString:backgroundColor];
+        _player.view.backgroundColor = [self colorWithHexString:backgroundColor];
     } else {
-        player.view.backgroundColor = [UIColor blackColor];
+        _player.view.backgroundColor = [UIColor blackColor];
     }
     
     [self startZenderPlayerWhenSettersComplete];
@@ -167,26 +165,26 @@
 
 // Currently we check to see if we got all setters before starting the player
 - (void) startZenderPlayerWhenSettersComplete {
-    if (targetId == nil) { return; }
-    if (channelId == nil) { return; }
-    if (authentication == nil) { return ; }
-    if (config == nil) { return ; }
+    if (_targetId == nil) { return; }
+    if (_channelId == nil) { return; }
+    if (_authentication == nil) { return ; }
+    if (_config == nil) { return ; }
     
-    player.view.frame = self.frame;
+    _player.view.frame = self.frame;
     
     //[self setupApiSubscribeDevice];
-    [player start];
+    [_player start];
 }
 
 - (void)dealloc
 {
     //NSLog(@"alloc dealloc");
-    [player stop];
-    player = nil;
+    [_player stop];
+    _player = nil;
 }
 
 
-+ (UIColor *)colorWithHexString:(NSString *)stringToConvert
+- (UIColor *)colorWithHexString:(NSString *)stringToConvert
 {
     NSString *noHashString = [stringToConvert stringByReplacingOccurrencesOfString:@"#" withString:@""]; // remove the #
     NSScanner *scanner = [NSScanner scannerWithString:noHashString];
